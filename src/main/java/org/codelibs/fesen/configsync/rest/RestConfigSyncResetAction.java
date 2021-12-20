@@ -21,15 +21,13 @@ public class RestConfigSyncResetAction extends RestConfigSyncAction {
     private final ConfigSyncService configSyncService;
 
     @Inject
-    public RestConfigSyncResetAction(final Settings settings, final RestController controller,
-            final ConfigSyncService configSyncService) {
+    public RestConfigSyncResetAction(final Settings settings, final RestController controller, final ConfigSyncService configSyncService) {
         this.configSyncService = configSyncService;
     }
 
     @Override
     public List<Route> routes() {
-        return unmodifiableList(asList(
-                new Route(POST, "/_configsync/reset")));
+        return unmodifiableList(asList(new Route(POST, "/_configsync/reset")));
     }
 
     @Override

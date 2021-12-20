@@ -39,10 +39,8 @@ public class RestConfigSyncFileAction extends RestConfigSyncAction {
 
     @Override
     public List<Route> routes() {
-        return unmodifiableList(asList(
-                new Route(GET, "/_configsync/file"),
-                new Route(POST, "/_configsync/file"),
-                new Route(DELETE, "/_configsync/file")));
+        return unmodifiableList(
+                asList(new Route(GET, "/_configsync/file"), new Route(POST, "/_configsync/file"), new Route(DELETE, "/_configsync/file")));
     }
 
     @Override
@@ -80,15 +78,14 @@ public class RestConfigSyncFileAction extends RestConfigSyncAction {
                         params.put(fields.length == 0 ? "path" : "file", response);
                         sendResponse(channel, params);
                     }, e -> sendErrorResponse(channel, e)));
-                } else {
-                    return channel -> configSyncService.getContent(path, wrap(configContent -> {
-                        if (configContent != null) {
-                            channel.sendResponse(new BytesRestResponse(OK, "application/octet-stream", configContent));
-                        } else {
-                            channel.sendResponse(new BytesRestResponse(NOT_FOUND, path + " is not found."));
-                        }
-                    }, e -> sendErrorResponse(channel, e)));
                 }
+                return channel -> configSyncService.getContent(path, wrap(configContent -> {
+                    if (configContent != null) {
+                        channel.sendResponse(new BytesRestResponse(OK, "application/octet-stream", configContent));
+                    } else {
+                        channel.sendResponse(new BytesRestResponse(NOT_FOUND, path + " is not found."));
+                    }
+                }, e -> sendErrorResponse(channel, e)));
             }
             case POST: {
                 if (content == null) {

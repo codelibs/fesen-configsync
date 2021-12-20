@@ -21,15 +21,13 @@ public class RestConfigSyncFlushAction extends RestConfigSyncAction {
     private final ConfigSyncService configSyncService;
 
     @Inject
-    public RestConfigSyncFlushAction(final Settings settings, final RestController controller,
-            final ConfigSyncService configSyncService) {
+    public RestConfigSyncFlushAction(final Settings settings, final RestController controller, final ConfigSyncService configSyncService) {
         this.configSyncService = configSyncService;
     }
 
     @Override
     public List<Route> routes() {
-        return unmodifiableList(asList(
-                new Route(POST, "/_configsync/flush")));
+        return unmodifiableList(asList(new Route(POST, "/_configsync/flush")));
     }
 
     @Override

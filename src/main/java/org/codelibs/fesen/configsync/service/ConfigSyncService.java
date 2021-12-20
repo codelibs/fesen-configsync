@@ -244,11 +244,11 @@ public class ConfigSyncService extends AbstractLifecycleComponent {
                 }
             }, e -> {
                 logger.warn("Could not create .configsync. Retrying to start it.", e);
-                threadPool.schedule(() -> waitForClusterReady(), TimeValue.timeValueSeconds(15), Names.GENERIC);
+                threadPool.schedule(this::waitForClusterReady, TimeValue.timeValueSeconds(15), Names.GENERIC);
             }));
         }, e -> {
             logger.warn("Could not start ConfigFileUpdater. Retrying to start it.", e);
-            threadPool.schedule(() -> waitForClusterReady(), TimeValue.timeValueSeconds(15), Names.GENERIC);
+            threadPool.schedule(this::waitForClusterReady, TimeValue.timeValueSeconds(15), Names.GENERIC);
         }));
     }
 
@@ -283,8 +283,7 @@ public class ConfigSyncService extends AbstractLifecycleComponent {
                     .field("auto_expand_replicas", "0-all")//
                     .endObject()//
                     .endObject();
-            client().admin().indices().prepareCreate(index).setSettings(settingsBuilder)
-                    .addMapping(type, source, XContentType.JSON)
+            client().admin().indices().prepareCreate(index).setSettings(settingsBuilder).addMapping(type, source, XContentType.JSON)
                     .execute(wrap(response -> waitForIndex(listener), listener::onFailure));
         } catch (final IOException e) {
             listener.onFailure(e);
@@ -327,9 +326,8 @@ public class ConfigSyncService extends AbstractLifecycleComponent {
     public void getPaths(final int from, final int size, final String[] fields, final String sortField, final String sortOrder,
             final ActionListener<List<Object>> listener) {
         checkIfIndexExists(wrap(res -> {
-            final boolean hasFields = !(fields == null || fields.length == 0);
-            client().prepareSearch(index).setSize(size).setFrom(from)
-                    .setFetchSource(hasFields ? fields : new String[] { PATH }, null)
+            final boolean hasFields = ((fields != null) && (fields.length != 0));
+            client().prepareSearch(index).setSize(size).setFrom(from).setFetchSource(hasFields ? fields : new String[] { PATH }, null)
                     .addSort(sortField, SortOrder.DESC.toString().equalsIgnoreCase(sortOrder) ? SortOrder.DESC : SortOrder.ASC)
                     .execute(wrap(response -> {
                         final List<Object> objList = new ArrayList<>();
@@ -371,7 +369,7 @@ public class ConfigSyncService extends AbstractLifecycleComponent {
                     new TransportResponseHandler<ResetSyncResponse>() {
 
                         @Override
-                        public ResetSyncResponse read(StreamInput in) throws IOException {
+                        public ResetSyncResponse read(final StreamInput in) throws IOException {
                             return new ResetSyncResponse(in);
                         }
 
@@ -434,7 +432,7 @@ public class ConfigSyncService extends AbstractLifecycleComponent {
                     new TransportResponseHandler<FileFlushResponse>() {
 
                         @Override
-                        public FileFlushResponse read(StreamInput in) throws IOException {
+                        public FileFlushResponse read(final StreamInput in) throws IOException {
                             return new FileFlushResponse(in);
                         }
 
@@ -470,9 +468,9 @@ public class ConfigSyncService extends AbstractLifecycleComponent {
     }
 
     public void delete(final String path, final ActionListener<DeleteResponse> listener) {
-        checkIfIndexExists(
-                wrap(response -> client().prepareDelete(index, type, getId(path)).setRefreshPolicy(RefreshPolicy.IMMEDIATE).execute(listener),
-                        listener::onFailure));
+        checkIfIndexExists(wrap(
+                response -> client().prepareDelete(index, type, getId(path)).setRefreshPolicy(RefreshPolicy.IMMEDIATE).execute(listener),
+                listener::onFailure));
     }
 
     public void waitForStatus(final String waitForStatus, final String timeout, final ActionListener<ClusterHealthResponse> listener) {
@@ -526,7 +524,8 @@ public class ConfigSyncService extends AbstractLifecycleComponent {
     private Date getTimestamp(final Object value) throws ParseException {
         if (value instanceof Date) {
             return (Date) value;
-        } else if (value instanceof Number) {
+        }
+        if (value instanceof Number) {
             return new Date(((Number) value).longValue());
         } else {
             final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -576,8 +575,7 @@ public class ConfigSyncService extends AbstractLifecycleComponent {
             final QueryBuilder queryBuilder =
                     QueryBuilders.boolQuery().filter(QueryBuilders.rangeQuery(TIMESTAMP).from(lastChecked.getTime()));
             lastChecked = now;
-            client().prepareSearch(index).setQuery(queryBuilder).setScroll(scrollForUpdate).setSize(sizeForUpdate)
-                    .execute(this);
+            client().prepareSearch(index).setQuery(queryBuilder).setScroll(scrollForUpdate).setSize(sizeForUpdate).execute(this);
         }
 
         public void terminate() {
@@ -637,7 +635,6 @@ public class ConfigSyncService extends AbstractLifecycleComponent {
 
     public static class FileFlushRequest extends TransportRequest {
         FileFlushRequest() {
-            super();
         }
 
         FileFlushRequest(final StreamInput in) throws IOException {
@@ -678,7 +675,6 @@ public class ConfigSyncService extends AbstractLifecycleComponent {
 
     public static class ResetSyncRequest extends TransportRequest {
         ResetSyncRequest() {
-            super();
         }
 
         ResetSyncRequest(final StreamInput in) throws IOException {

@@ -21,15 +21,13 @@ public class RestConfigSyncWaitAction extends RestConfigSyncAction {
     private final ConfigSyncService configSyncService;
 
     @Inject
-    public RestConfigSyncWaitAction(final Settings settings, final RestController controller,
-            final ConfigSyncService configSyncService) {
+    public RestConfigSyncWaitAction(final Settings settings, final RestController controller, final ConfigSyncService configSyncService) {
         this.configSyncService = configSyncService;
     }
 
     @Override
     public List<Route> routes() {
-        return unmodifiableList(asList(
-                new Route(GET, "/_configsync/wait")));
+        return unmodifiableList(asList(new Route(GET, "/_configsync/wait")));
     }
 
     @Override

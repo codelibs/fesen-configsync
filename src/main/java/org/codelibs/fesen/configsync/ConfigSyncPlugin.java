@@ -42,9 +42,9 @@ public class ConfigSyncPlugin extends Plugin implements ActionPlugin, SystemInde
     private final PluginComponent pluginComponent = new PluginComponent();
 
     @Override
-    public List<RestHandler> getRestHandlers(final Settings settings, final RestController restController, final ClusterSettings clusterSettings,
-            final IndexScopedSettings indexScopedSettings, final SettingsFilter settingsFilter, final IndexNameExpressionResolver indexNameExpressionResolver,
-            final Supplier<DiscoveryNodes> nodesInCluster) {
+    public List<RestHandler> getRestHandlers(final Settings settings, final RestController restController,
+            final ClusterSettings clusterSettings, final IndexScopedSettings indexScopedSettings, final SettingsFilter settingsFilter,
+            final IndexNameExpressionResolver indexNameExpressionResolver, final Supplier<DiscoveryNodes> nodesInCluster) {
         final ConfigSyncService service = pluginComponent.getConfigSyncService();
         return Arrays.asList(//
                 new RestConfigSyncFileAction(settings, restController, service), //
@@ -61,12 +61,11 @@ public class ConfigSyncPlugin extends Plugin implements ActionPlugin, SystemInde
     }
 
     @Override
-    public Collection<Object> createComponents(Client client, ClusterService clusterService, ThreadPool threadPool,
-            ResourceWatcherService resourceWatcherService, ScriptService scriptService,
-            NamedXContentRegistry xContentRegistry, Environment environment,
-            NodeEnvironment nodeEnvironment, NamedWriteableRegistry namedWriteableRegistry,
-            IndexNameExpressionResolver indexNameExpressionResolver,
-            Supplier<RepositoriesService> repositoriesServiceSupplier) {
+    public Collection<Object> createComponents(final Client client, final ClusterService clusterService, final ThreadPool threadPool,
+            final ResourceWatcherService resourceWatcherService, final ScriptService scriptService,
+            final NamedXContentRegistry xContentRegistry, final Environment environment, final NodeEnvironment nodeEnvironment,
+            final NamedWriteableRegistry namedWriteableRegistry, final IndexNameExpressionResolver indexNameExpressionResolver,
+            final Supplier<RepositoriesService> repositoriesServiceSupplier) {
         final Collection<Object> components = new ArrayList<>();
         components.add(pluginComponent);
         return components;
@@ -87,7 +86,7 @@ public class ConfigSyncPlugin extends Plugin implements ActionPlugin, SystemInde
     }
 
     @Override
-    public Collection<SystemIndexDescriptor> getSystemIndexDescriptors(Settings settings) {
+    public Collection<SystemIndexDescriptor> getSystemIndexDescriptors(final Settings settings) {
         return Collections.unmodifiableList(Arrays.asList(new SystemIndexDescriptor(".configsync", "Contains config sync data")));
     }
 
