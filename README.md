@@ -1,4 +1,4 @@
-Elasticsearch Config Sync Plugin
+Fesen Config Sync Plugin
 [![Java CI with Maven](https://github.com/codelibs/fesen-configsync/actions/workflows/maven.yml/badge.svg)](https://github.com/codelibs/fesen-configsync/actions/workflows/maven.yml)
 =======================
 
@@ -9,16 +9,16 @@ These files are managed in .configsync index, and each node sync up with them.
 
 ## Version
 
-[Versions in Maven Repository](https://repo1.maven.org/maven2/org/codelibs/elasticsearch-configsync/)
+[Versions in Maven Repository](https://repo1.maven.org/maven2/org/codelibs/fesen-configsync/)
 
 ### Issues/Questions
 
-Please file an [issue](https://github.com/codelibs/elasticsearch-configsync/issues "issue").
+Please file an [issue](https://github.com/codelibs/fesen-configsync/issues "issue").
 (Japanese forum is [here](https://github.com/codelibs/codelibs-ja-forum "here").)
 
 ## Installation
 
-    $ $ES_HOME/bin/elasticsearch-plugin install org.codelibs:elasticsearch-configsync:7.6.0
+    $ $ES_HOME/bin/fesen-plugin install org.codelibs:fesen-configsync:7.6.0
 
 ## Getting Started
 
@@ -27,7 +27,7 @@ Please file an [issue](https://github.com/codelibs/elasticsearch-configsync/issu
     $ curl -XPOST -H 'Content-Type:application/json' localhost:9200/_configsync/file?path=user-dict.txt --data-binary @user-dict.txt
 
 The above request is to add file info to .configsync index.
-path parameter is a synced file location under $ES_CONF directory(ex. /etc/elasticsearch/user-dict.txt).
+path parameter is a synced file location under $ES_CONF directory(ex. /etc/fesen/user-dict.txt).
 
 ### Get File List
 
@@ -51,7 +51,7 @@ Send DELETE request with path parameter:
 ### Sync
 
 Each node copies a file from .configsync index periodically if the file is updated.
-The interval time is specified by configsync.flush_interval in /etc/elasticserch/elasticsearch.yml.
+The interval time is specified by configsync.flush_interval in /etc/elasticserch/fesen.yml.
 The default value is 1m.
 
     configsync.flush_interval: 1m
