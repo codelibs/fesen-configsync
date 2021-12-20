@@ -1,5 +1,5 @@
 Elasticsearch Config Sync Plugin
-[![Java CI with Maven](https://github.com/codelibs/fesen-configsync/actions/workflows/maven.yml/badge.svg)](https://github.com/codelibs/fesen-aconfigsync/actions/workflows/maven.yml)
+[![Java CI with Maven](https://github.com/codelibs/fesen-configsync/actions/workflows/maven.yml/badge.svg)](https://github.com/codelibs/fesen-configsync/actions/workflows/maven.yml)
 =======================
 
 ## Overview
